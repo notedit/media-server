@@ -111,6 +111,8 @@ public:
 	
 	void SetListener(Listener* listener);
 
+	QWORD GetLastActiveTime() { return lastActiveTime; }
+
 private:
 	void SetState(DTLSState state);
 	void Probe();
@@ -193,7 +195,8 @@ private:
 	Timer::shared probingTimer;
 	QWORD   lastProbe = 0;
 	QWORD 	initTime = 0;
-	
+	QWORD   lastActiveTime = 0;
+
 	SendSideBandwidthEstimation senderSideBandwidthEstimator;
 };
 

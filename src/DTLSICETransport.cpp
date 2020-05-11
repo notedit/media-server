@@ -85,8 +85,10 @@ void DTLSICETransport::onDTLSPendingData()
 
 int DTLSICETransport::onData(const ICERemoteCandidate* candidate,const BYTE* data,DWORD size)
 {
+
+	lastActiveTime = getTimeMS();
 	//Acumulate bitrate
-	incomingBitrate.Update(getTimeMS(),size);
+	incomingBitrate.Update(lastActiveTime,size);
 	
 	//Check if it a DTLS packet
 	if (DTLSConnection::IsDTLS(data,size))
