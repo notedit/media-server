@@ -48,7 +48,8 @@ DTLSICETransport::DTLSICETransport(Sender *sender,TimeService& timeService) :
 	incomingBitrate(250),
 	outgoingBitrate(250),
 	rtxBitrate(250),
-	probingBitrate(250)
+	probingBitrate(250),
+	lastActiveTime(getTimeMS())
 {
 }
 
@@ -994,7 +995,7 @@ void DTLSICETransport::ReSendPacket(RTPOutgoingSourceGroup *group,WORD seq)
 	rtxBitrate.Update(now/1000,len);
 	
 	//Get time for packets to discard, always have at least 200ms, max 500ms
-	QWORD until = now/1000 - (200+fmin(rtt*2,300));
+	QWORD until = now/1000 - (1000+fmin(rtt*2,300));
 	
 	//Release packets from rtx queue
 	group->ReleasePackets(until);	
@@ -2045,15 +2046,15 @@ int DTLSICETransport::Send(RTPPacket::shared&& packet)
 	}
 
 	//Get time for packets to discard, always have at least 200ms, max 500ms
-	QWORD until = now/1000 - (200+fmin(rtt*2,300));
+	QWORD until = now/1000 - (1000+fmin(rtt*2,300));
 	
 	//Release packets from rtx queue
 	group->ReleasePackets(until);
 	
 	//If packet is an key frame
-	if (packet->IsKeyFrame())
+	//if (packet->IsKeyFrame())
 		//Do not retransmit packets before this frame
-		group->ReleasePacketsByTimestamp(packet->GetTimestamp());
+	//	group->ReleasePacketsByTimestamp(packet->GetTimestamp());
 	
 	//Check if we need to send SR (1 per second)
 	if (now-source.lastSenderReport>1E6)
