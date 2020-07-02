@@ -45,7 +45,8 @@ public:
 	int Init(int port);
 	Connection* AddICETransport(const std::string &username,const Properties& properties);
 	int RemoveICETransport(const std::string &username);
-	
+	void DeleteOutGoingSourceGroup(RTPOutgoingSourceGroup *outgoing);
+
 	int End();
 	
 	int GetLocalPort() const { return port; }

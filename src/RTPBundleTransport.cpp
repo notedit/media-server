@@ -725,3 +725,15 @@ void RTPBundleTransport::onTimer(std::chrono::milliseconds now)
 		SendBindingRequest(connection,candidate);
 	}
 }
+
+void RTPBundleTransport::DeleteOutGoingSourceGroup(RTPOutgoingSourceGroup *outgoing)
+{
+     Log("DeleteOutGoingSourceGroup %p\n",outgoing);
+     if(outgoing) {
+        loop.Async([=](...) {
+            delete outgoing;
+           }
+        );
+     }
+}
+
